@@ -4,13 +4,20 @@ import time
 import lights
 import tools
 
+from lifxlan import *
+
+lan = LifxLAN()
+
+"""
 try:
     import requests
 except ImportError:
     tools.notify("Kodi Hue", "ERROR: Could not import Python requests")
-
+"""
 
 def user_exists(bridge_ip, bridge_user, notify=True):
+    return True
+    """
     req = requests.get('http://{}/api/{}/config'.format(
         bridge_ip, bridge_user))
     res = req.json()
@@ -29,17 +36,20 @@ def user_exists(bridge_ip, bridge_user, notify=True):
             tools.notify("Kodi Hue", "Could not connect to bridge")
 
     return success
-
+    """
 
 def discover():
+    """
     bridge_ip = _discover_upnp()
     if bridge_ip is None:
         bridge_ip = _discover_nupnp()
 
     return bridge_ip
-
+    """
+    return "127.0.0.1"
 
 def create_user(bridge_ip, notify=True):
+    """
     device = 'kodi#ambilight'
     data = '{{"devicetype": "{}"}}'.format(device)
 
@@ -56,13 +66,17 @@ def create_user(bridge_ip, notify=True):
     username = res[0]['success']['username']
 
     return username
+    """
+    return "kodi"
 
 
 def get_lights(bridge_ip, username):
-    return get_lights_by_ids(bridge_ip, username)
+    # return get_lights_by_ids(bridge_ip, username)
+    return lan.get_lights()
 
 
 def get_lights_by_ids(bridge_ip, username, light_ids=None):
+    """
     req = requests.get('http://{}/api/{}/lights'.format(bridge_ip, username))
     res = req.json()
 
@@ -76,18 +90,46 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
     for light_id in light_ids:
         found[light_id] = lights.Light(bridge_ip, username, light_id,
                                        res[light_id])
+   return found
+   """
 
+    found = {}
+
+    if light_ids is None:
+        all_lights = get_lights(bridge_ip, username)
+        for light in all_lights:
+            # todo add try catch
+            light_id = light.get_label()
+            found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                           light)
+    elif light_ids == ['']:
+        found = {}
+    else:
+        for light_id in light_ids:
+            # todo add try catch
+            found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                           lan.get_device_by_name(light_id))
     return found
 
-
 def get_lights_by_group(bridge_ip, username, group_id):
+    """
     req = requests.get('http://{}/api/{}/groups/{}'.format(
         bridge_ip, username, group_id))
     res = req.json()
 
     light_ids = res['lights']
     return get_lights_by_ids(bridge_ip, username, light_ids)
+    """
+    devices_by_group = lan.get_devices_by_group(group_id)
+    # device_ids = [device.get_label() for device in devices_by_group.get_device_list()]
 
+    found = {}
+    for device in devices_by_group.get_device_list():
+        light_id = device.get_label()
+        found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                       device)
+
+    return get_lights_by_ids(bridge_ip, username, device_ids)
 
 def _discover_upnp():
     port = 1900
@@ -118,7 +160,6 @@ def _discover_upnp():
             break
 
     return bridge_ip
-
 
 def _discover_nupnp():
     # verify false hack until meethue fixes their ssl cert.

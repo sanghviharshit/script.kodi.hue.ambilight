@@ -11,6 +11,10 @@ def multiselect_lights(bridge_ip, bridge_user, label, exclude,
                 bridge_ip, bridge_user, label, exclude, preselect)
             )
     lights = bridge.get_lights_by_ids(bridge_ip, bridge_user)
+    xbmclog('Kodi Hue: In multiselect_lights(lights={})'.format(
+                lights)
+            )
+
     actual_lights = []
     items = []
     preselect_items = []

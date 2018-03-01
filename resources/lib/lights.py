@@ -1,50 +1,65 @@
 import json
-import requests
+# import requests
 
 from tools import xbmclog
 
 
 class Light(object):
 
-    def __init__(self, bridge_ip, username, light_id, spec):
+    def __init__(self, bridge_ip, username, light_id, light):
         self.bridge_ip = bridge_ip
         self.username = username
 
         self.light_id = light_id
-        self.fullspectrum = ((spec['type'] == 'Color Light') or
-                             (spec['type'] == 'Extended Color Light'))
-        self.livingwhite = False
-        self.name = spec['name']
+        self.light = light
+        self.color = light.get_color()
+        # self.features = light.get_product_features()
+        self.fullspectrum = (self.light.get_product_features()['color'] == True)
+        self.livingwhite = (self.light.get_product_features()['color'] == False)
+        self.name = light_id
 
         self.init_hue = None
         self.hue = None
         try:
-            self.init_hue = spec['state']['hue']
+            self.init_hue = self.color[0]
             self.hue = self.init_hue
-        except KeyError:
+        except:
             self.livingwhite = True
 
         self.init_sat = None
         self.sat = None
         try:
-            self.init_sat = spec['state']['sat']
+            self.init_sat = self.color[1]*255/65535
             self.sat = self.init_sat
-        except KeyError:
+        except:
             self.livingwhite = True
 
         try:
-            self.init_bri = spec['state']['bri']
+            self.init_bri = self.color[2]*255/65535
             self.bri = self.init_bri
-        except KeyError:
+        except:
             self.livingwhite = True
 
-        self.init_on = spec['state']['on']
+        try:
+            self.init_kel = self.color[3]
+            self.kel = self.init_kel
+        except:
+            self.livingwhite = True
+
+        self.init_on = (self.light.get_power() == 65535)
         self.on = self.init_on
 
-        self.session = requests.Session()
+        self.last_on = self.init_on
+        self.last_hue = self.init_hue
+        self.last_sat = self.init_sat
+        self.last_bri = self.init_bri
+        self.last_kel = self.init_kel
+
+        # self.session = requests.Session()
 
     def set_state(self, hue=None, sat=None, bri=None, on=None,
                   transition_time=None):
+        rapid = False
         state = {}
         if transition_time is not None:
             state['transitiontime'] = transition_time
@@ -68,13 +83,39 @@ class Light(object):
                 self.on = True
                 state['on'] = True
 
-        data = json.dumps(state)
+        if 'hue' not in state:
+            state['hue'] = self.last_hue
+        if 'sat' not in state:
+            state['sat'] = self.last_sat
+        if 'bri' not in state:
+            state['bri'] = self.last_bri
+        # if 'kel' not in state:
+            # state['kel'] = self.last_kel
+        if 'transitiontime' not in state:
+            state['transitiontime'] = 0
+            rapid = True
+
+        state['kel'] = 3500  # Set kelvin to neutral
+
+        # data = json.dumps(state)
+
+        if 'on' in state:
+          self.light.set_power(state['on'], rapid=False)
+
+        # color is a list of HSBK values: [hue (0-65535), saturation (0-65535), brightness (0-65535), Kelvin (2500-9000)]
+        # 65535/255 = 257
+        color = [int(state['hue']),int(state['sat']*257),int(state['bri']*257),int(state['kel'])]
+        xbmclog('Kodi Hue: In set_state(state={}, color={})'.format(
+                    state, color)
+                )
+                #color_log = [int(data["hue"]*360/65535),int(data["sat"]*100/255),int(data["bri"]*100/255),int(data["kel"])]
+        #self.logger.debuglog("set_light2: %s: %s  (%s ms)" % (self.light.get_label(), color_log, data["transitiontime"]*self.multiplier))
+
+        # Lifxlan duration is in miliseconds, for hue it's multiple of 100ms - https://developers.meethue.com/documentation/lights-api#16_set_light_state
         try:
-            endpoint = 'http://{}/api/{}/lights/{}/state'.format(
-                self.bridge_ip, self.username, self.light_id)
-            self.session.put(endpoint, data)
-        except Exception:
-            pass
+            self.light.set_color(color, state['transitiontime']*100, rapid=rapid)
+        except WorkflowException:
+            self.logger.debuglog("set_color: %s failed to respond to a request" % self.light.get_label())
 
     def restore_initial_state(self, transition_time=0):
         self.set_state(
