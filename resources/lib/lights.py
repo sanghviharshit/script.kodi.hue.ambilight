@@ -16,7 +16,7 @@ class Light(object):
         self.light = light
         self.color = light.color
         # self.features = light.get_product_features()
-        self.fullspectrum = self.light.supports_color()
+        self.fullspectrum = self.light.supports_color() # All Lifx Color bulbs are fullspectrum
         self.livingwhite = not self.light.supports_color()
         self.name = light_id
 
@@ -44,7 +44,7 @@ class Light(object):
         xbmclog("Kodi Hue: Added light={} - current_state: hue-{}, sat-{}, bri-{},on-{}".format(self.name, self.hue, self.sat, self.bri, self.on))
         # self.session = requests.Session()
 
-    def set_state(self, hue=None, sat=None, bri=None, on=None,
+    def set_state(self, hue=None, sat=None, bri=None, kel=None, on=None,
                   transition_time=None):
         rapid = False
         state = {}
@@ -75,21 +75,29 @@ class Light(object):
                 self.on = True
                 state['on'] = True
 
+        if kel is not None and kel != self.kel:
+            self.kel = kel
+            state['kel'] = kel
+        elif sat == 0:
+            state["kel"] = self.init_kel
+
+        # override kel to neutral if hue or sat > 0
+        if hue > 0 or sat > 0:
+            self.kel = 3500
+            state['kel']  = 3500  # Set kelvin to neutral
+
         if 'hue' not in state:
             state['hue'] = self.hue
         if 'sat' not in state:
             state['sat'] = self.sat
         if 'bri' not in state:
             state['bri'] = self.bri
-        # if 'kel' not in state:
-            # state['kel'] = self.kel
+        if 'kel' not in state:
+            state['kel'] = self.kel
         if 'transitiontime' not in state:
             state['transitiontime'] = 0
             rapid = True
 
-        state['kel'] = 3500  # Set kelvin to neutral
-
-        # data = json.dumps(state)
 
         if 'on' in state:
             try:
@@ -116,6 +124,7 @@ class Light(object):
             self.init_hue,
             self.init_sat,
             self.init_bri,
+            self.init_kel,
             self.init_on,
             transition_time
         )
@@ -153,7 +162,7 @@ class Controller(object):
             'on_playback_stop must be implemented in the controller'
         )
 
-    def set_state(self, hue=None, sat=None, bri=None, on=None,
+    def set_state(self, hue=None, sat=None, bri=None, kel=None, on=None,
                   transition_time=None, lights=None, force_on=True):
         xbmclog(
             'Kodi Hue: In {}.set_state(hue={}, sat={}, bri={}, '

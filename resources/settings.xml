@@ -12,6 +12,7 @@
         <setting id="setup_ambilight_lights" type="action" enable="!eq(-4,false)" label="1130" action="RunScript(script.kodi.hue.ambilight,action=setup_ambilight_lights)" />
         <setting id="setup_static_lights" type="action" enable="!eq(-5,false)" label="1140" action="RunScript(script.kodi.hue.ambilight,action=setup_static_lights)" />
         <!-- Bridge -->
+        <!--
         <setting type="lsep" label="1200" />
         <setting id="bridge_ip" type="text" label="1220" enable="false" default="" />
         <setting id="bridge_user" type="text" label="1230" enable="false" default="" />
@@ -20,6 +21,7 @@
         <setting id="theater_group" label="1300" type="text" visible="false" default="" />
         <setting id="theater_subgroup" label="1300" type="text" visible="false" default="" />
         <setting id="static_group" label="1300" type="text" visible="false" default="" />
+        -->
         <!-- Reset -->
         <setting type="lsep" label="1400" />
         <setting id="reset_settings" type="action" label="1410" action="RunScript(script.kodi.hue.ambilight,action=reset_settings)" option="close" />
@@ -38,19 +40,38 @@
 
         <!-- Playback Start -->
         <setting type="lsep" label="2200" />
+        <setting id="theater_start_hue_override" type="bool" label="2206" default="false" />
+        <setting id="theater_start_hue" type="slider" label="2207" default="14910" visible="eq(-1,true)" range="0,1000,65535" option="int" />
+        <setting id="theater_start_sat_override" type="bool" label="2208" default="false" />
+        <setting id="theater_start_sat" type="slider" label="2209" default="144" visible="eq(-1,true)" range="0,255" option="int" />
         <setting id="theater_start_bri_override" label="2210" type="bool" default="false" />
         <setting id="theater_start_bri" label="2220" visible="eq(-1,true)" type="slider" default="30" range="0,5,254" option="int" />
+        <setting id="theater_start_kel_override" type="bool" label="2221" default="false" />
+        <setting id="theater_start_kel" type="enum" label="2222" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
 
         <!-- Playback Pause -->
         <setting type="lsep" label="2300" />
         <setting id="theater_pause_dim_subgroup" label="2305" type="bool" default="false" />
+        <setting id="theater_pause_hue_override" type="bool" label="2306" default="false" />
+        <setting id="theater_pause_hue" type="slider" label="2307" default="14910" visible="eq(-1,true)" range="0,1000,65535" option="int" />
+        <setting id="theater_pause_sat_override" type="bool" label="2308" default="false" />
+        <setting id="theater_pause_sat" type="slider" label="2309" default="144" visible="eq(-1,true)" range="0,255" option="int" />
         <setting id="theater_pause_bri_override" label="2310" type="bool" default="false" />
         <setting id="theater_pause_bri" label="2320" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
+        <setting id="theater_pause_kel_override" type="bool" label="2321" default="false" />
+        <setting id="theater_pause_kel" type="enum" label="2321" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
 
         <!-- Playback Stop -->
         <setting type="lsep" label="2400" />
+        <setting id="theater_stop_hue_override" type="bool" label="2406" default="false" />
+        <setting id="theater_stop_hue" type="slider" label="2407" default="14910" visible="eq(-1,true)" range="0,1000,65535" option="int" />
+        <setting id="theater_stop_sat_override" type="bool" label="2408" default="false" />
+        <setting id="theater_stop_sat" type="slider" label="2409" default="144" visible="eq(-1,true)" range="0,255" option="int" />
         <setting id="theater_stop_bri_override" label="2410" type="bool" default="false" />
         <setting id="theater_stop_bri" label="2420" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
+        <setting id="theater_stop_kel_override" type="bool" label="2421" default="false" />
+        <setting id="theater_stop_kel" type="enum" label="2422" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+
     </category>
 
     <category label="3000">
@@ -71,27 +92,28 @@
 
         <!--Color-->
         <setting type="lsep" label="3300" />
-        <setting id="color_bias" label="3310" type="slider" default="18" range="6,3,36" option="int" />
+        <setting id="color_variation" type="enum" enable="true" label="3301" default="1" lvalues="3302|3303" />
+        <setting id="color_bias" label="3310" type="slider" default="18" enable="eq(-1,1)" range="6,3,36" option="int" />
         <setting label="3320" type="lsep" subsetting="true" /> <!--Color Bias Explainer-->
 
         <!-- Playback Start -->
         <setting type="lsep" label="3400" />
-        <setting id="ambilight_start_dim_override" label="3420" visible="eq(-8,true)" type="bool" default="false" />
+        <setting id="ambilight_start_dim_override" label="3420" enable="eq(-9,true)" type="bool" default="false" />
         <setting id="ambilight_start_dim" label="3430" visible="eq(-1,true)" type="slider" default="30" range="0,5,254" option="int" />
 
         <!-- Playback Pause -->
         <setting type="lsep" label="3500" />
-        <setting id="ambilight_pause_bri_override" label="3510" visible="eq(-11,true)"  type="bool" default="false" />
+        <setting id="ambilight_pause_bri_override" label="3510" enable="eq(-12,true)"  type="bool" default="false" />
         <setting id="ambilight_pause_bri" label="3520" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
 
         <!-- Playback Stop -->
         <setting type="lsep" label="3600" />
-        <setting id="ambilight_stop_bri_override" label="3610" visible="eq(-14,true)" type="bool" default="false" />
+        <setting id="ambilight_stop_bri_override" label="3610" enable="eq(-15,true)" type="bool" default="false" />
         <setting id="ambilight_stop_bri" label="3620" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
     </category>
 
     <category label="4000">
-        <!-- Theater -->
+        <!-- Static -->
         <setting type="lsep" label="4000" />
 
         <!-- Playback Start -->
@@ -103,6 +125,8 @@
         <setting id="static_start_sat" label="4140" visible="eq(-1,true)" type="slider" default="30" range="0,5,254" option="int" />
         <setting id="static_start_bri_override" label="4150" type="bool" default="false" />
         <setting id="static_start_bri" label="4160" visible="eq(-1,true)" type="slider" default="100" range="0,5,254" option="int" />
+        <setting id="static_start_kel_override" type="bool" label="4165" default="false" enable=""/>
+        <setting id="static_start_kel" type="enum" label="4166" default="3500" enable="eq(-7,false) + eq(-5,false)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
     </category>
 
     <category label="5000">

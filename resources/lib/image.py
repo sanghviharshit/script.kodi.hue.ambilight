@@ -71,15 +71,6 @@ class Screenshot:
         hsv_ratios = []
         hsv_ratios_dict = {}
 
-        xbmclog("Kodi Hue: most_used_spectrum() - spectrum - {}".format(spectrum))
-        xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
-
-        xbmclog("Kodi Hue: most_used_spectrum() - saturation - {}".format(spectrum))
-        xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
-
-        xbmclog("Kodi Hue: most_used_spectrum() - value - {}".format(spectrum))
-        xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
-
         for i in spectrum:
             # shift index to the right so that groups are centered on primary
             # and secondary colors
@@ -117,18 +108,11 @@ class Screenshot:
 
         # Averaging hsvr by dividing the total of hsv by number pixel_count for each hue key
         for hsvr in hsv_ratios:
-            xbmclog("Kodi Hue: most_used_spectrum() - hsvr - before - {}".format(hsvr))
-            xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
-
             hsvr.h = (float) (hsvr.h / hsvr.hue_count)
             hsvr.s = (float) (hsvr.s / hsvr.hue_count)
             hsvr.v = (float) (hsvr.v / hsvr.hue_count)
 
-            xbmclog("Kodi Hue: most_used_spectrum() - hsvr - after - {}".format(hsvr))
-            xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
-
         color_count = len(hsv_ratios)
-        xbmclog("Kodi Hue: most_used_spectrum() - color_count - {}".format(color_count))
 
         if color_count > 1:
             # sort colors by popularity
@@ -141,9 +125,6 @@ class Screenshot:
                 ratio.average_value(overall_value)
             if len(hsv_ratios) < num_hsv:
                 hsv_ratios += [hsv_ratios[--1]] * (num_hsv - len(hsv_ratios))
-
-            xbmclog("Kodi Hue: most_used_spectrum() - returning hsv_ratios - {}".format(hsv_ratios))
-            xbmclog("Kodi Hue: most_used_spectrum() - ==============================")
 
             return hsv_ratios
 

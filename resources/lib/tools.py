@@ -19,7 +19,7 @@ def xbmclog(message):
     if TESTING_ENV:
         pass
     else:
-        xbmc.log(message)
+        xbmc.log("Kodi Lifx: %s" % message)
 
 
 def notify(title, msg=''):

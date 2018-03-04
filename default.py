@@ -23,7 +23,7 @@ import ui
 import algorithm
 import image
 
-xbmclog("Kodi Hue: In .(argv={}) service started, version: {}".format(
+xbmclog("In .(argv={}) service started, version: {}".format(
     sys.argv, get_version()))
 
 ev = Event()
@@ -41,11 +41,11 @@ class MyMonitor(xbmc.Monitor):
 
     def onSettingsChanged(self):
         hue.settings.readxml()
-        xbmclog('Kodi Hue: In onSettingsChanged() {}'.format(hue.settings))
+        xbmclog('In onSettingsChanged() {}'.format(hue.settings))
         hue.update_controllers()
 
     def onNotification(self, sender, method, data):
-        xbmclog('Kodi Hue: In onNotification(sender={}, method={}, data={})'
+        xbmclog('In onNotification(sender={}, method={}, data={})'
                 .format(sender, method, data))
         if sender == __addon__.getAddonInfo('id'):
             if method == 'Other.start_setup_theater_lights':
@@ -101,11 +101,11 @@ class MyPlayer(xbmc.Player):
     movie = False
 
     def __init__(self):
-        xbmclog('Kodi Hue: In MyPlayer.__init__()')
+        xbmclog('In MyPlayer.__init__()')
         xbmc.Player.__init__(self)
 
     def onPlayBackStarted(self):
-        xbmclog('Kodi Hue: In MyPlayer.onPlayBackStarted()')
+        xbmclog('In MyPlayer.onPlayBackStarted()')
         playlist = xbmc.PlayList(xbmc.PLAYLIST_VIDEO)
         self.playlistlen = playlist.size()
         self.playlistpos = playlist.getposition()
@@ -114,13 +114,13 @@ class MyPlayer(xbmc.Player):
         state_changed("started", self.duration)
 
     def onPlayBackPaused(self):
-        xbmclog('Kodi Hue: In MyPlayer.onPlayBackPaused()')
+        xbmclog('In MyPlayer.onPlayBackPaused()')
         state_changed("paused", self.duration)
         if self.isPlayingVideo():
             self.playingvideo = False
 
     def onPlayBackResumed(self):
-        xbmclog('Kodi Hue: In MyPlayer.onPlayBackResume()')
+        xbmclog('In MyPlayer.onPlayBackResume()')
         state_changed("resumed", self.duration)
         if self.isPlayingVideo():
             self.playingvideo = True
@@ -128,13 +128,13 @@ class MyPlayer(xbmc.Player):
                 self.duration = self.getTotalTime()
 
     def onPlayBackStopped(self):
-        xbmclog('Kodi Hue: In MyPlayer.onPlayBackStopped()')
+        xbmclog('In MyPlayer.onPlayBackStopped()')
         state_changed("stopped", self.duration)
         self.playingvideo = False
         self.playlistlen = 0
 
     def onPlayBackEnded(self):
-        xbmclog('Kodi Hue: In MyPlayer.onPlayBackEnded()')
+        xbmclog('In MyPlayer.onPlayBackEnded()')
         # If there are upcoming plays, ignore
         if self.playlistpos < self.playlistlen-1:
             return
@@ -220,7 +220,7 @@ class Hue:
         )
 
         xbmclog(
-            'Kodi Hue: In Hue.update_controllers() instantiated following '
+            'In Hue.update_controllers() instantiated following '
             'controllers {} {} {}'.format(
                 self.theater_controller,
                 self.ambilight_controller,
@@ -232,7 +232,7 @@ class Hue:
 def run():
     player = MyPlayer()
     if player is None:
-        xbmclog('Kodi Hue: In run() could not instantiate player')
+        xbmclog('In run() could not instantiate player')
         return
 
     while not monitor.abortRequested():
@@ -261,12 +261,12 @@ def run():
                     pass
 
         if monitor.waitForAbort(0.1):
-            xbmclog('Kodi Hue: In run() deleting player')
+            xbmclog('In run() deleting player')
             del player  # might help with slow exit.
 
 
 def state_changed(state, duration):
-    xbmclog('Kodi Hue: In state_changed(state={}, duration={})'.format(
+    xbmclog('In state_changed(state={}, duration={})'.format(
         state, duration))
 
     if (xbmc.getCondVisibility('Window.IsActive(screensaver-atv4.xml)') or
@@ -307,6 +307,8 @@ if (__name__ == "__main__"):
     settings = Settings()
     monitor = MyMonitor(settings)
 
+    xbmclog("In main() - Settings - %s".format(settings))
+    
     args = None
     if len(sys.argv) == 2:
         args = sys.argv[1]

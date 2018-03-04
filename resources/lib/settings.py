@@ -25,15 +25,33 @@ class Settings():
         self.dim_time = int(float(__addon__.getSetting("dim_time"))*10)
         self.proportional_dim_time = __addon__.getSetting("proportional_dim_time") == "true"
 
+        self.theater_start_hue_override = __addon__.getSetting("theater_start_hue_override") == "true"
+        self.theater_start_hue = int(__addon__.getSetting("theater_start_hue").split(".")[0])
+        self.theater_start_sat_override = __addon__.getSetting("theater_start_sat_override") == "true"
+        self.theater_start_sat = int(__addon__.getSetting("theater_start_sat").split(".")[0])
         self.theater_start_bri_override = __addon__.getSetting("theater_start_bri_override") == "true"
         self.theater_start_bri = int(__addon__.getSetting("theater_start_bri").split(".")[0])
+        self.theater_start_kel_override = __addon__.getSetting("theater_start_kel_override") == "true"
+        self.theater_start_kel = int(__addon__.getSetting("theater_start_kel").split(".")[0])
 
         self.theater_pause_dim_subgroup = __addon__.getSetting("theater_pause_dim_subgroup") == "true"
+        self.theater_pause_hue_override = __addon__.getSetting("theater_pause_hue_override") == "true"
+        self.theater_pause_hue = int(__addon__.getSetting("theater_pause_hue").split(".")[0])
+        self.theater_pause_sat_override = __addon__.getSetting("theater_pause_sat_override") == "true"
+        self.theater_pause_sat = int(__addon__.getSetting("theater_pause_sat").split(".")[0])
         self.theater_pause_bri_override = __addon__.getSetting("theater_pause_bri_override") == "true"
         self.theater_pause_bri = int(__addon__.getSetting("theater_pause_bri").split(".")[0])
+        self.theater_pause_kel_override = __addon__.getSetting("theater_pause_kel_override") == "true"
+        self.theater_pause_kel = int(__addon__.getSetting("theater_pause_kel").split(".")[0])
 
+        self.theater_stop_hue_override = __addon__.getSetting("theater_stop_hue_override") == "true"
+        self.theater_stop_hue = int(__addon__.getSetting("theater_stop_hue").split(".")[0])
+        self.theater_stop_sat_override = __addon__.getSetting("theater_stop_sat_override") == "true"
+        self.theater_stop_sat = int(__addon__.getSetting("theater_stop_sat").split(".")[0])
         self.theater_stop_bri_override = __addon__.getSetting("theater_stop_bri_override") == "true"
         self.theater_stop_bri = int(__addon__.getSetting("theater_stop_bri").split(".")[0])
+        self.theater_stop_kel_override = __addon__.getSetting("theater_stop_kel_override") == "true"
+        self.theater_stop_kel = int(__addon__.getSetting("theater_stop_kel").split(".")[0])
 
         self.ambilight_min = int(__addon__.getSetting("ambilight_min").split(".")[0])
         self.ambilight_max = int(__addon__.getSetting("ambilight_max").split(".")[0])
@@ -41,6 +59,7 @@ class Settings():
         self.ambilight_threshold_value = int(__addon__.getSetting("ambilight_threshold_value").split(".")[0])
         self.ambilight_threshold_saturation = int(__addon__.getSetting("ambilight_threshold_saturation").split(".")[0])
 
+        self.color_variation = int(__addon__.getSetting("color_variation"))
         self.color_bias = int(__addon__.getSetting("color_bias").split(".")[0])
 
         self.ambilight_start_dim_enable = __addon__.getSetting("ambilight_start_dim_enable") == "true"
@@ -60,6 +79,8 @@ class Settings():
         self.static_start_sat = int(__addon__.getSetting("static_start_sat").split(".")[0])
         self.static_start_bri_override = __addon__.getSetting("static_start_bri_override") == "true"
         self.static_start_bri = int(__addon__.getSetting("static_start_bri").split(".")[0])
+        self.static_start_kel_override = __addon__.getSetting("static_start_kel_override") == "true"
+        self.static_start_kel = int(__addon__.getSetting("static_start_kel").split(".")[0])
 
         self.misc_initialflash = __addon__.getSetting("misc_initialflash") == "true"
         self.misc_disableshort = __addon__.getSetting("misc_disableshort") == "true"

@@ -26,17 +26,37 @@
     <string id="2130">Example: Take 70% of transition time if dimming 70%</string>
 
     <string id="2200">Playback Start (or Resume)</string>
+    <string id="2206">Override Hue</string>
+    <string id="2207">Choose Hue</string>
+    <string id="2208">Override Saturation</string>
+    <string id="2209">Choose Saturation</string>
     <string id="2210">Override Brightness (default 30)</string>
     <string id="2220">Choose Brightness</string>
+    <string id="2221">Override Kelvin</string>
+    <string id="2222">Choose Kelvin</string>
+
 
     <string id="2300">Playback Pause</string>
     <string id="2305">Only Undim Subgroup</string>
+    <string id="2306">Override Hue</string>
+    <string id="2307">Choose Hue</string>
+    <string id="2308">Override Saturation</string>
+    <string id="2309">Choose Saturation</string>
     <string id="2310">Override Brightness (default initial)</string>
     <string id="2320">Choose Brightness</string>
+    <string id="2321">Override Kelvin</string>
+    <string id="2322">Choose Kelvin</string>
+
 
     <string id="2400">Playback Stop</string>
+    <string id="2406">Override Hue</string>
+    <string id="2407">Choose Hue</string>
+    <string id="2408">Override Saturation</string>
+    <string id="2409">Choose Saturation</string>
     <string id="2410">Override Brightness (default initial)</string>
     <string id="2420">Choose Brightness</string>
+    <string id="2421">Override Kelvin</string>
+    <string id="2422">Choose Kelvin</string>
 
     <!-- Ambilight -->
     <string id="3000">Ambilight</string>
@@ -51,6 +71,9 @@
     <string id="3220">Saturation</string>
 
     <string id="3300">Color</string>
+    <string id="3301">Color Variation</string>
+    <string id="3302">Same Color for All Lights</string>
+    <string id="3303">Different Colors for Different Lights</string>
     <string id="3310">Bias</string>
     <string id="3320">Sensitivity: 6=variety with >1 light, 36=accuracy</string>
 
@@ -75,6 +98,8 @@
     <string id="4140">Choose Saturation</string>
     <string id="4150">Override Brightness (default 100)</string>
     <string id="4160">Choose Brightness</string>
+    <string id="4165">Override Kelvin</string>
+    <string id="4166">Choose Kelvin</string>
 
     <!-- Advanced -->
     <string id="5000">Advanced</string>
