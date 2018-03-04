@@ -5,6 +5,7 @@ import lights
 import tools
 
 from lifxlan import *
+from tools import xbmclog, notify
 
 lan = LifxLAN()
 
@@ -14,6 +15,8 @@ try:
 except ImportError:
     tools.notify("Kodi Hue", "ERROR: Could not import Python requests")
 """
+
+lights_cache = None
 
 def user_exists(bridge_ip, bridge_user, notify=True):
     return True
@@ -39,6 +42,14 @@ def user_exists(bridge_ip, bridge_user, notify=True):
     """
 
 def discover():
+    lifx_lights = get_lights("127.0.0.1", "kodi")
+    if lifx_lights and len(lifx_lights) > 0:
+      xbmclog("Kodi Hue: discover() - Found {0} Lifx lights".format(str(len(lifx_lights))))
+      notify("Kodi Lifx", "Found {0} Lifx lights".format(str(len(lifx_lights))))
+    else:
+      xbmclog("Kodi Hue: discover() - No Lifx bulbs found")
+      notify("Kodi Lifx", "No Lifx bulbs found")
+
     """
     bridge_ip = _discover_upnp()
     if bridge_ip is None:
@@ -70,9 +81,18 @@ def create_user(bridge_ip, notify=True):
     return "kodi"
 
 
-def get_lights(bridge_ip, username):
+def get_lights(bridge_ip, username, refresh=False):
     # return get_lights_by_ids(bridge_ip, username)
-    return lan.get_lights()
+    global lights_cache
+    if lights_cache == None or len(lights_cache) == 0 or refresh == True:
+        try:
+            lights_cache = lan.get_lights(9)
+            xbmclog("Kodi Hue: get_lights() - Found {} Lifx lights".format(str(len(lights_cache))))
+        except:
+            pass
+    else:
+        xbmclog("Kodi Hue: get_lights() - Returning {} cached Lifx lights".format(str(len(lights_cache))))
+    return lights_cache
 
 
 def get_lights_by_ids(bridge_ip, username, light_ids=None):
@@ -94,21 +114,34 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
    """
 
     found = {}
-
-    if light_ids is None:
+    xbmclog("Kodi Hue: In get_lights_by_ids() - light_ids - {}".format(light_ids))
+    if light_ids == None:
         all_lights = get_lights(bridge_ip, username)
-        for light in all_lights:
-            # todo add try catch
-            light_id = light.get_label()
-            found[light_id] = lights.Light(bridge_ip, username, light_id,
-                                           light)
+        xbmclog("Kodi Hue: get_lights_by_ids() - all_lights - {}".format(all_lights))
+        if all_lights:
+            for lifx_light in all_lights:
+                try:
+                    light_id = lifx_light.get_label()
+                    xbmclog("Kodi Hue: get_lights_by_ids() - adding {}".format(light_id))
+                    found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                                lifx_light)
+                except:
+                    pass
     elif light_ids == ['']:
         found = {}
     else:
         for light_id in light_ids:
-            # todo add try catch
-            found[light_id] = lights.Light(bridge_ip, username, light_id,
-                                           lan.get_device_by_name(light_id))
+            lifx_light = None
+            try:
+                lifx_light = lan.get_device_by_name(light_id)
+            except:
+                xbmclog("Kodi Hue: get_lights_by_ids() - Didn't find device - {}".format(light_id))
+            if lifx_light:
+                xbmclog("Kodi Hue: get_lights_by_ids() - Found {}".format(light_id))
+                found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                            lifx_light)
+
+    xbmclog("Kodi Hue: get_lights_by_ids() - Found {} Lifx lights".format(str(len(found))))
     return found
 
 def get_lights_by_group(bridge_ip, username, group_id):
@@ -120,7 +153,10 @@ def get_lights_by_group(bridge_ip, username, group_id):
     light_ids = res['lights']
     return get_lights_by_ids(bridge_ip, username, light_ids)
     """
-    devices_by_group = lan.get_devices_by_group(group_id)
+    try:
+        devices_by_group = lan.get_devices_by_group(group_id)
+    except:
+        pass
     # device_ids = [device.get_label() for device in devices_by_group.get_device_list()]
 
     found = {}

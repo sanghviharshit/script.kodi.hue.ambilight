@@ -66,6 +66,15 @@ class Settings():
         self.misc_disableshort_threshold = int(__addon__.getSetting("misc_disableshort_threshold"))
         self.force_light_on = __addon__.getSetting("force_light_on") == "true"
 
+        if self.ambilight_group == None:
+            self.ambilight_group = ''
+        if self.theater_group == None:
+            self.theater_group = ''
+        if self.theater_subgroup == None:
+            self.theater_subgroup = ''
+        if self.static_group == None:
+            self.static_group = ''
+
         if self.ambilight_min > self.ambilight_max:
             self.update(ambilight_min=self.ambilight_max)
 

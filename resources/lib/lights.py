@@ -10,57 +10,49 @@ class Light(object):
         self.bridge_ip = bridge_ip
         self.username = username
 
+        xbmclog("Kodi Hue: Adding Light object: {}".format(light))
+
         self.light_id = light_id
         self.light = light
-        self.color = light.get_color()
+        self.color = light.color
         # self.features = light.get_product_features()
-        self.fullspectrum = (self.light.get_product_features()['color'] == True)
-        self.livingwhite = (self.light.get_product_features()['color'] == False)
+        self.fullspectrum = self.light.supports_color()
+        self.livingwhite = not self.light.supports_color()
         self.name = light_id
 
         self.init_hue = None
         self.hue = None
-        try:
-            self.init_hue = self.color[0]
-            self.hue = self.init_hue
-        except:
-            self.livingwhite = True
 
         self.init_sat = None
         self.sat = None
-        try:
+
+        if self.fullspectrum:
+            self.init_hue = self.color[0]
+            self.hue = self.init_hue
             self.init_sat = self.color[1]*255/65535
             self.sat = self.init_sat
-        except:
-            self.livingwhite = True
 
-        try:
-            self.init_bri = self.color[2]*255/65535
-            self.bri = self.init_bri
-        except:
-            self.livingwhite = True
+        self.init_bri = self.color[2]*255/65535
+        self.bri = self.init_bri
 
-        try:
-            self.init_kel = self.color[3]
-            self.kel = self.init_kel
-        except:
-            self.livingwhite = True
+        self.init_kel = self.color[3]
+        self.kel = self.init_kel
 
-        self.init_on = (self.light.get_power() == 65535)
+        self.init_on = (self.light.power_level > 0)
         self.on = self.init_on
 
-        self.last_on = self.init_on
-        self.last_hue = self.init_hue
-        self.last_sat = self.init_sat
-        self.last_bri = self.init_bri
-        self.last_kel = self.init_kel
-
+        xbmclog("Kodi Hue: Added light={} - current_state: hue-{}, sat-{}, bri-{},on-{}".format(self.name, self.hue, self.sat, self.bri, self.on))
         # self.session = requests.Session()
 
     def set_state(self, hue=None, sat=None, bri=None, on=None,
                   transition_time=None):
         rapid = False
         state = {}
+
+        xbmclog('Kodi Hue: set_state() - light={} - new_state: hue={}, sat={}, bri={}, on={}, transition_time={})'.format(self.name, hue, sat, bri, on, transition_time))
+
+        xbmclog("Kodi Hue: set_state() - light={} - current_state: hue-{}, sat-{}, bri-{},on-{}".format(self.name, self.hue, self.sat, self.bri, self.on))
+
         if transition_time is not None:
             state['transitiontime'] = transition_time
         if on is not None and on != self.on:
@@ -84,13 +76,13 @@ class Light(object):
                 state['on'] = True
 
         if 'hue' not in state:
-            state['hue'] = self.last_hue
+            state['hue'] = self.hue
         if 'sat' not in state:
-            state['sat'] = self.last_sat
+            state['sat'] = self.sat
         if 'bri' not in state:
-            state['bri'] = self.last_bri
+            state['bri'] = self.bri
         # if 'kel' not in state:
-            # state['kel'] = self.last_kel
+            # state['kel'] = self.kel
         if 'transitiontime' not in state:
             state['transitiontime'] = 0
             rapid = True
@@ -100,22 +92,24 @@ class Light(object):
         # data = json.dumps(state)
 
         if 'on' in state:
-          self.light.set_power(state['on'], rapid=False)
+            try:
+                self.light.set_power(state['on'], rapid=False)
+            except:
+                xbmclog('Kodi Hue: set_state() - failed to set_power()')
 
+        xbmclog('Kodi Hue: set_state() - light={} - final_state={})'.format(self.name, state))
         # color is a list of HSBK values: [hue (0-65535), saturation (0-65535), brightness (0-65535), Kelvin (2500-9000)]
         # 65535/255 = 257
         color = [int(state['hue']),int(state['sat']*257),int(state['bri']*257),int(state['kel'])]
-        xbmclog('Kodi Hue: In set_state(state={}, color={})'.format(
-                    state, color)
-                )
+        xbmclog('Kodi Hue: set_state() - light={} - color={})'.format(self.name, color))
                 #color_log = [int(data["hue"]*360/65535),int(data["sat"]*100/255),int(data["bri"]*100/255),int(data["kel"])]
         #self.logger.debuglog("set_light2: %s: %s  (%s ms)" % (self.light.get_label(), color_log, data["transitiontime"]*self.multiplier))
 
         # Lifxlan duration is in miliseconds, for hue it's multiple of 100ms - https://developers.meethue.com/documentation/lights-api#16_set_light_state
         try:
             self.light.set_color(color, state['transitiontime']*100, rapid=rapid)
-        except WorkflowException:
-            self.logger.debuglog("set_color: %s failed to respond to a request" % self.light.get_label())
+        except:
+            xbmclog("Kodi Hue: set_color() - light={} - failed to set_color()".format(self.name))
 
     def restore_initial_state(self, transition_time=0):
         self.set_state(
@@ -130,6 +124,7 @@ class Light(object):
         self.init_hue = self.hue
         self.init_sat = self.sat
         self.init_bri = self.bri
+        self.init_kel = self.kel
         self.init_on = self.on
 
     def __repr__(self):

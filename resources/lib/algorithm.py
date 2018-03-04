@@ -17,5 +17,6 @@ def transition_colorspace(hue, light, hsvratio):
     # changed to squares for performance
     distance = math.sqrt(hvec**2 + svec**2 + vvec**2)
     if distance > 0:
+        # duration = int(3 + 27 * distance/255)
         duration = int(10 - 2.5 * distance/255)
         light.set_state(hue=h, sat=s, bri=v, transition_time=duration)

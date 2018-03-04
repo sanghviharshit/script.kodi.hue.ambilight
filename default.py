@@ -195,6 +195,8 @@ class Hue:
                 self.static_controller.flash_lights()
 
     def update_controllers(self):
+        if self.settings.ambilight_group == None:
+            self.settings.ambilight_group = ''
         self.ambilight_controller = AmbilightController(
             bridge.get_lights_by_ids(
                 self.settings.bridge_ip,
@@ -241,12 +243,12 @@ def run():
             vals = {}
             if player.playingvideo:  # only if there's actually video
                 try:
-                    vals = capture.getImage(200)
-                    if len(vals) > 0 and player.playingvideo:
+                    pixels = capture.getImage(200)
+                    if len(pixels) > 0 and player.playingvideo:
                         startReadOut = True
                     if startReadOut:
                         screen = image.Screenshot(
-                            capture.getImage())
+                            pixels)
                         hsv_ratios = screen.spectrum_hsv(
                             screen.pixels,
                             hue.settings.ambilight_threshold_value,
