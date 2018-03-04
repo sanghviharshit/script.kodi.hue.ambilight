@@ -6,9 +6,10 @@ class AmbilightController(lights.Controller):
     def __init__(self, *args, **kwargs):
         super(AmbilightController, self).__init__(*args, **kwargs)
 
-    def on_playback_start(self):
+    def on_playback_start(self, resume=False):
         if self.settings.ambilight_start_dim_enable:
-            self.save_state_as_initial()
+            if resume == False:
+                self.save_state_as_initial()
 
             xbmclog('Kodi Hue: In AmbilightController.on_playback_start() '
                     'dimming ambilight group')

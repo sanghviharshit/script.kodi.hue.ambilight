@@ -47,7 +47,7 @@
         <setting id="theater_start_bri_override" label="2210" type="bool" default="false" />
         <setting id="theater_start_bri" label="2220" visible="eq(-1,true)" type="slider" default="30" range="0,5,254" option="int" />
         <setting id="theater_start_kel_override" type="bool" label="2221" default="false" />
-        <setting id="theater_start_kel" type="enum" label="2222" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+        <setting id="theater_start_kel" type="labelenum" label="2222" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
 
         <!-- Playback Pause -->
         <setting type="lsep" label="2300" />
@@ -59,7 +59,7 @@
         <setting id="theater_pause_bri_override" label="2310" type="bool" default="false" />
         <setting id="theater_pause_bri" label="2320" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
         <setting id="theater_pause_kel_override" type="bool" label="2321" default="false" />
-        <setting id="theater_pause_kel" type="enum" label="2321" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+        <setting id="theater_pause_kel" type="labelenum" label="2321" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
 
         <!-- Playback Stop -->
         <setting type="lsep" label="2400" />
@@ -70,7 +70,7 @@
         <setting id="theater_stop_bri_override" label="2410" type="bool" default="false" />
         <setting id="theater_stop_bri" label="2420" visible="eq(-1,true)" type="slider" default="150" range="0,5,254" option="int" />
         <setting id="theater_stop_kel_override" type="bool" label="2421" default="false" />
-        <setting id="theater_stop_kel" type="enum" label="2422" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+        <setting id="theater_stop_kel" type="labelenum" label="2422" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
 
     </category>
 
@@ -126,7 +126,7 @@
         <setting id="static_start_bri_override" label="4150" type="bool" default="false" />
         <setting id="static_start_bri" label="4160" visible="eq(-1,true)" type="slider" default="100" range="0,5,254" option="int" />
         <setting id="static_start_kel_override" type="bool" label="4165" default="false" enable=""/>
-        <setting id="static_start_kel" type="enum" label="4166" default="3500" enable="eq(-7,false) + eq(-5,false)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+        <setting id="static_start_kel" type="labelenum" label="4166" default="3500" enable="eq(-7,false) + eq(-5,false)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
     </category>
 
     <category label="5000">

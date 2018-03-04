@@ -2,10 +2,10 @@ import socket
 import time
 
 import lights
-import tools
+# import tools
 
 from lifxlan import *
-from tools import xbmclog, notify
+from tools import *
 
 lan = LifxLAN()
 
@@ -42,13 +42,14 @@ def user_exists(bridge_ip, bridge_user, notify=True):
     """
 
 def discover():
-    lifx_lights = get_lights("127.0.0.1", "kodi")
+    show_busy_dialog()
+    lifx_lights = get_lights("127.0.0.1", "kodi", refresh=True)
     if lifx_lights and len(lifx_lights) > 0:
-      xbmclog("Kodi Hue: discover() - Found {0} Lifx lights".format(str(len(lifx_lights))))
+      xbmclog("discover() - Found {0} Lifx lights".format(str(len(lifx_lights))))
       notify("Kodi Lifx", "Found {0} Lifx lights".format(str(len(lifx_lights))))
     else:
-      xbmclog("Kodi Hue: discover() - No Lifx bulbs found")
-      notify("Kodi Lifx", "No Lifx bulbs found")
+      xbmclog("discover() - No Lifx lights found")
+      notify("Kodi Lifx", "No Lifx lights found")
 
     """
     bridge_ip = _discover_upnp()
@@ -57,6 +58,7 @@ def discover():
 
     return bridge_ip
     """
+    hide_busy_dialog()
     return "127.0.0.1"
 
 def create_user(bridge_ip, notify=True):
@@ -87,11 +89,11 @@ def get_lights(bridge_ip, username, refresh=False):
     if lights_cache == None or len(lights_cache) == 0 or refresh == True:
         try:
             lights_cache = lan.get_lights()
-            xbmclog("Kodi Hue: get_lights() - Found {} Lifx lights".format(str(len(lights_cache))))
+            xbmclog("get_lights() - Found {} Lifx lights".format(str(len(lights_cache))))
         except:
             pass
     else:
-        xbmclog("Kodi Hue: get_lights() - Returning {} cached Lifx lights".format(str(len(lights_cache))))
+        xbmclog("get_lights() - Returning {} cached Lifx lights".format(str(len(lights_cache))))
     return lights_cache
 
 
@@ -112,17 +114,18 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
                                        res[light_id])
    return found
    """
-
+    show_busy_dialog()
     found = {}
-    xbmclog("Kodi Hue: In get_lights_by_ids() - light_ids - {}".format(light_ids))
+    xbmclog("In get_lights_by_ids() - light_ids - {}".format(light_ids))
     if light_ids == None:
-        lifx_light = get_lights(bridge_ip, username)
-        xbmclog("Kodi Hue: get_lights_by_ids() - all_lights - {}".format(lifx_light))
-        if lifx_light and len(lifx_light) > 0:
-            for lifx_light in lifx_light:
+        lifx_lights = get_lights(bridge_ip, username)
+        if lifx_lights and len(lifx_lights) > 0:
+            lifx_lights_ids = [lifx_light.get_label() for lifx_light in lifx_lights]
+            xbmclog("get_lights_by_ids() - lifx_lights - {}".format(lifx_lights_ids))
+            for lifx_light in lifx_lights:
                 try:
                     light_id = lifx_light.get_label()
-                    xbmclog("Kodi Hue: get_lights_by_ids() - adding {}".format(light_id))
+                    xbmclog("get_lights_by_ids() - Adding {}".format(light_id))
                     found[light_id] = lights.Light(bridge_ip, username, light_id,
                                                 lifx_light)
                 except:
@@ -130,18 +133,17 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
     elif light_ids == ['']:
         found = {}
     else:
-        for light_id in light_ids:
-            lifx_light = None
-            try:
-                lifx_light = lan.get_device_by_name(light_id)
-            except:
-                xbmclog("Kodi Hue: get_lights_by_ids() - Didn't find device - {}".format(light_id))
-            if lifx_light:
-                xbmclog("Kodi Hue: get_lights_by_ids() - Found {}".format(light_id))
-                found[light_id] = lights.Light(bridge_ip, username, light_id,
-                                            lifx_light)
+        lifx_lights = get_lights(bridge_ip, username)
+        if lifx_lights and len(lifx_lights) > 0:
+            for light_id in light_ids:
+                for lifx_light in lifx_lights:
+                    if lifx_light.get_label() == light_id:
+                        xbmclog("get_lights_by_ids() - Found {}".format(light_id))
+                        found[light_id] = lights.Light(bridge_ip, username, light_id,
+                                                lifx_light)
 
-    xbmclog("Kodi Hue: get_lights_by_ids() - Found {} Lifx lights".format(str(len(found))))
+    xbmclog("get_lights_by_ids() - Returning {} Lifx lights".format(str(len(found))))
+    hide_busy_dialog()
     return found
 
 def get_lights_by_group(bridge_ip, username, group_id):

@@ -157,6 +157,12 @@ class Hue:
         except Exception:
             params = {}
 
+        xbmclog(
+            'In Hue.__init__'
+            'params={}'.format(
+                params)
+            )
+
         if params == {}:
             # if there's a bridge IP, try to talk to it.
             if self.settings.bridge_ip not in ["-", "", None]:
@@ -286,9 +292,12 @@ def state_changed(state, duration):
 
     if state == "started" or state == "resumed":
         ev.set()
-        hue.theater_controller.on_playback_start()
-        hue.ambilight_controller.on_playback_start()
-        hue.static_controller.on_playback_start()
+        resume = False
+        if state == "resumed":
+            resume = True
+        hue.theater_controller.on_playback_start(resume)
+        hue.ambilight_controller.on_playback_start(resume)
+        hue.static_controller.on_playback_start(resume)
         ev.clear()
 
     elif state == "paused":
@@ -307,8 +316,8 @@ if (__name__ == "__main__"):
     settings = Settings()
     monitor = MyMonitor(settings)
 
-    xbmclog("In main() - Settings - %s".format(settings))
-    
+    xbmclog("In main() - Settings - {}".format(settings))
+
     args = None
     if len(sys.argv) == 2:
         args = sys.argv[1]

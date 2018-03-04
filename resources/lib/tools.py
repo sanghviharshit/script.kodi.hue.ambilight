@@ -39,3 +39,11 @@ def get_version():
                 return line[line.find("version=")+9:line.find(" provider")-1]
     except:
         return "unknown"
+
+def show_busy_dialog():
+    xbmc.executebuiltin('ActivateWindow(busydialog)')
+
+def hide_busy_dialog():
+    xbmc.executebuiltin('Dialog.Close(busydialog)')
+    while xbmc.getCondVisibility('Window.IsActive(busydialog)'):
+        xbmc.sleep(100)

@@ -39,15 +39,16 @@ def multiselect_lights(bridge_ip, bridge_user, label, exclude,
 
 
 def discover_hue_bridge(hue):
-    notify("Hue Bridge Discovery", "starting")
+    notify("Lifx Device Discovery", "Starting")
     hue_ip = bridge.discover()
     if hue_ip is not None:
-        notify("Hue Bridge Discovery", "Found bridge at: %s" % hue_ip)
+        # notify("Hue Bridge Discovery", "Found bridge at: %s" % hue_ip)
         username = bridge.create_user(hue_ip)
         hue.settings.update(bridge_ip=hue_ip)
         hue.settings.update(bridge_user=username)
         hue.settings.update(connected="true")
         hue.connected = True
-        notify("Hue Bridge Discovery", "Finished")
+        # notify("Hue Bridge Discovery", "Finished")
     else:
-        notify("Hue Bridge Discovery", "Failed. Could not find bridge.")
+        # notify("Hue Bridge Discovery", "Failed. Could not find bridge.")
+        pass
