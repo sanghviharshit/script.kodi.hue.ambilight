@@ -86,7 +86,7 @@ def get_lights(bridge_ip, username, refresh=False):
     global lights_cache
     if lights_cache == None or len(lights_cache) == 0 or refresh == True:
         try:
-            lights_cache = lan.get_lights(9)
+            lights_cache = lan.get_lights()
             xbmclog("Kodi Hue: get_lights() - Found {} Lifx lights".format(str(len(lights_cache))))
         except:
             pass
@@ -116,10 +116,10 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
     found = {}
     xbmclog("Kodi Hue: In get_lights_by_ids() - light_ids - {}".format(light_ids))
     if light_ids == None:
-        all_lights = get_lights(bridge_ip, username)
-        xbmclog("Kodi Hue: get_lights_by_ids() - all_lights - {}".format(all_lights))
-        if all_lights:
-            for lifx_light in all_lights:
+        lifx_light = get_lights(bridge_ip, username)
+        xbmclog("Kodi Hue: get_lights_by_ids() - all_lights - {}".format(lifx_light))
+        if lifx_light and len(lifx_light) > 0:
+            for lifx_light in lifx_light:
                 try:
                     light_id = lifx_light.get_label()
                     xbmclog("Kodi Hue: get_lights_by_ids() - adding {}".format(light_id))

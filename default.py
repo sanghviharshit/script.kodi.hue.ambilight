@@ -195,8 +195,6 @@ class Hue:
                 self.static_controller.flash_lights()
 
     def update_controllers(self):
-        if self.settings.ambilight_group == None:
-            self.settings.ambilight_group = ''
         self.ambilight_controller = AmbilightController(
             bridge.get_lights_by_ids(
                 self.settings.bridge_ip,
