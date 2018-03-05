@@ -80,8 +80,8 @@
 
         <!-- Global Settings-->
         <setting type="lsep" label="3100" />
-        <setting id="ambilight_min" label="3110" type="slider" default="0" range="0,5,254" option="int" />
-        <setting id="ambilight_max" label="3120" type="slider" default="90" range="0,5,254" option="int" />
+        <setting id="ambilight_min" label="3110" type="slider" default="30" range="0,5,254" option="int" />
+        <setting id="ambilight_max" label="3120" type="slider" default="150" range="0,5,254" option="int" />
 
         <setting id="ambilight_start_dim_enable" label="3130" type="bool" default="true" />
 
@@ -92,8 +92,8 @@
 
         <!--Color-->
         <setting type="lsep" label="3300" />
-        <setting id="color_variation" type="enum" enable="true" label="3301" default="1" lvalues="3302|3303" />
-        <setting id="color_bias" label="3310" type="slider" default="18" enable="eq(-1,1)" range="6,3,36" option="int" />
+        <setting id="color_variation" label="3301" type="bool" enable="true" default="true" />
+        <setting id="color_bias" label="3310" type="slider" default="18" enable="eq(-1,true)" range="6,3,36" option="int" />
         <setting label="3320" type="lsep" subsetting="true" /> <!--Color Bias Explainer-->
 
         <!-- Playback Start -->
@@ -118,15 +118,15 @@
 
         <!-- Playback Start -->
         <setting type="lsep" label="4100" />
-        <setting id="static_start_random" label="4105" type="bool" visible="eq(1,false) + eq(3,false)" default="false" />
-        <setting id="static_start_hue_override" label="4110" visible="eq(-1,false)" type="bool" default="false" />
+        <setting id="static_start_random" label="4105" type="bool" enable="eq(1,false) + eq(3,false) + eq(7,false)" default="false" />
+        <setting id="static_start_hue_override" label="4110" enable="eq(-1,false)" type="bool" default="false" />
         <setting id="static_start_hue" label="4120" visible="eq(-1,true)" type="slider" default="30" range="0,100,65535" option="int" />
-        <setting id="static_start_sat_override" label="4130" visible="eq(-3,false)" type="bool" default="false" />
+        <setting id="static_start_sat_override" label="4130" enable="eq(-3,false)" type="bool" default="false" />
         <setting id="static_start_sat" label="4140" visible="eq(-1,true)" type="slider" default="30" range="0,5,254" option="int" />
         <setting id="static_start_bri_override" label="4150" type="bool" default="false" />
         <setting id="static_start_bri" label="4160" visible="eq(-1,true)" type="slider" default="100" range="0,5,254" option="int" />
-        <setting id="static_start_kel_override" type="bool" label="4165" default="false" enable=""/>
-        <setting id="static_start_kel" type="labelenum" label="4166" default="3500" enable="eq(-7,false) + eq(-5,false)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
+        <setting id="static_start_kel_override" label="4165" type="bool" enable="eq(-7,false)" default="false"/>
+        <setting id="static_start_kel" type="labelenum" label="4166" default="3500" visible="eq(-1,true)" values="2500|2750|3000|3200|3500|4000|4500|5000|5500|6000|6500|7000|7500|8000|8500|9000" />
     </category>
 
     <category label="5000">

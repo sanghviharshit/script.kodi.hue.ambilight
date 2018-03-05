@@ -59,7 +59,7 @@ class Settings():
         self.ambilight_threshold_value = int(__addon__.getSetting("ambilight_threshold_value").split(".")[0])
         self.ambilight_threshold_saturation = int(__addon__.getSetting("ambilight_threshold_saturation").split(".")[0])
 
-        self.color_variation = int(__addon__.getSetting("color_variation"))
+        self.color_variation = __addon__.getSetting("color_variation") == "true"
         self.color_bias = int(__addon__.getSetting("color_bias").split(".")[0])
 
         self.ambilight_start_dim_enable = __addon__.getSetting("ambilight_start_dim_enable") == "true"

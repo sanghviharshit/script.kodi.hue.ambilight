@@ -62,7 +62,7 @@ class Screenshot:
         self.pixels = pixels
 
     def most_used_spectrum(self, spectrum, saturation, value, size,
-                           overall_value, color_bias, num_hsv):
+                           overall_value, color_variation, color_bias, num_hsv):
         # color bias/groups 6 - 36 in steps of 3
         # 6 = more variety of colors, 36 = similar colors
         # colorHueRatio will be between 60 and 10. 60=close to primary colors, 10 = more to original colors
@@ -123,14 +123,20 @@ class Screenshot:
 
             for ratio in hsv_ratios:
                 ratio.average_value(overall_value)
+
             if len(hsv_ratios) < num_hsv:
                 hsv_ratios += [hsv_ratios[--1]] * (num_hsv - len(hsv_ratios))
+
+            if not color_variation:
+                # All ambilight lights will have one color
+                # Return list of just the first hsv_ratio
+                return [hsv_ratios[0]] * num_hsv
 
             return hsv_ratios
 
         return [HSVRatio()] * num_hsv
 
-    def spectrum_hsv(self, pixels, threshold_bri, threshold_sat, color_bias,
+    def spectrum_hsv(self, pixels, threshold_bri, threshold_sat, color_variation, color_bias,
                      num_hsv):
         spectrum = {}
         saturation = {}
@@ -174,7 +180,7 @@ class Screenshot:
             overall_value = v / float(len(pixels))
 
         return self.most_used_spectrum(
-            spectrum, saturation, value, size, overall_value, color_bias,
+            spectrum, saturation, value, size, overall_value, color_variation, color_bias,
             num_hsv)
 
 

@@ -257,6 +257,7 @@ def run():
                             screen.pixels,
                             hue.settings.ambilight_threshold_value,
                             hue.settings.ambilight_threshold_saturation,
+                            hue.settings.color_variation,
                             hue.settings.color_bias,
                             len(hue.ambilight_controller.lights)
                         )

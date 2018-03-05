@@ -46,7 +46,10 @@ class Light(object):
 
     def set_state(self, hue=None, sat=None, bri=None, kel=None, on=None,
                   transition_time=None):
-        rapid = True
+        # NOTE: From https://github.com/mclarkk/lifxlan -
+        #   rapid is True/False. If True, don't wait for successful confirmation, just send multiple packets and move on
+        #   rapid is meant for super-fast light shows with lots of changes.
+        rapid = False
         state = {}
 
         # xbmclog('set_state() - light={} - new_state: hue={}, sat={}, bri={}, on={}, transition_time={})'.format(self.name, hue, sat, bri, on, transition_time))
@@ -120,10 +123,7 @@ class Light(object):
         # NOTE:
         #   Lifxlan duration is in miliseconds, for hue it's multiple of 100ms - https://developers.meethue.com/documentation/lights-api#16_set_light_state
         try:
-            # NOTE: From https://github.com/mclarkk/lifxlan -
-            #   rapid is True/False. If True, don't wait for successful confirmation, just send multiple packets and move on
-            #   rapid is meant for super-fast light shows with lots of changes.
-            self.light.set_color(color, state['transitiontime']*100, rapid=rapid)
+            self.light.set_color(color, state['transitiontime']*100/2, rapid=rapid)
         except:
             xbmclog("set_color() - light={} - failed to set_color()".format(self.name))
 

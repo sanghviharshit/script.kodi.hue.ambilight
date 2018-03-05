@@ -67,15 +67,13 @@
     <string id="3130">Enable Dimming</string>
 
     <string id="3200">Thresholds</string>
-    <string id="3210">Value</string>
+    <string id="3210">Brightness Value</string>
     <string id="3220">Saturation</string>
 
     <string id="3300">Color</string>
-    <string id="3301">Color Variation</string>
-    <string id="3302">Same Color for All Lights</string>
-    <string id="3303">Different Colors for Different Lights</string>
+    <string id="3301">Differnt Colors for different lights</string>
     <string id="3310">Bias</string>
-    <string id="3320">Sensitivity: 6=variety with >1 light, 36=accuracy</string>
+    <string id="3320">Sensitivity: 6=variety with >1 light, 36=accuracy (often more similar colors)</string>
 
     <string id="3400">Playback Start (or resume)</string>
     <string id="3420">Override Brightness (default 30)</string>
