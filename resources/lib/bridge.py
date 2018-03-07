@@ -90,8 +90,8 @@ def get_lights(bridge_ip, username, refresh=False):
         try:
             lights_cache = lan.get_lights()
             xbmclog("get_lights() - Found {} Lifx lights".format(str(len(lights_cache))))
-        except:
-            pass
+        except Exception as e:
+            xbmclog("get_lights() - Exception - {}".format(str(e)))
     else:
         xbmclog("get_lights() - Returning {} cached Lifx lights".format(str(len(lights_cache))))
     return lights_cache
@@ -128,8 +128,8 @@ def get_lights_by_ids(bridge_ip, username, light_ids=None):
                     xbmclog("get_lights_by_ids() - Adding {}".format(light_id))
                     found[light_id] = lights.Light(bridge_ip, username, light_id,
                                                 lifx_light)
-                except:
-                    pass
+                except Exception as e:
+                    xbmclog("In get_lights_by_ids() - get_label() - Exception - {}".format(str(e)))
     elif light_ids == ['']:
         found = {}
     else:
@@ -157,8 +157,8 @@ def get_lights_by_group(bridge_ip, username, group_id):
     """
     try:
         devices_by_group = lan.get_devices_by_group(group_id)
-    except:
-        pass
+    except Exception as e:
+        xbmclog("In get_lights_by_group() - Exception - {}".format(str(e)))
     # device_ids = [device.get_label() for device in devices_by_group.get_device_list()]
 
     found = {}

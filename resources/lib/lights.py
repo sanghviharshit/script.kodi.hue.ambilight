@@ -108,8 +108,8 @@ class Light(object):
         if 'on' in state:
             try:
                 self.light.set_power(state['on'], rapid=False)
-            except:
-                xbmclog('set_state() - failed to set_power()')
+            except Exception as e:
+                xbmclog("set_state() - set_power({}) - Exception - {}".format(state['on'], str(e)))
 
         # xbmclog('set_state() - light={} - final_state={})'.format(self.name, state))
         # NOTE:
@@ -124,8 +124,8 @@ class Light(object):
         #   Lifxlan duration is in miliseconds, for hue it's multiple of 100ms - https://developers.meethue.com/documentation/lights-api#16_set_light_state
         try:
             self.light.set_color(color, state['transitiontime']*100/2, rapid=rapid)
-        except:
-            xbmclog("set_color() - light={} - failed to set_color()".format(self.name))
+        except Exception as e:
+            xbmclog("set_color() - light={} - failed to set_color({}) - Exception - {}".format(self.name, color, str(e)))
 
     def restore_initial_state(self, transition_time=0):
         self.set_state(

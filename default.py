@@ -150,7 +150,7 @@ class Hue:
 
     def __init__(self, settings, args):
         self.settings = settings
-        self.connected = False
+        # self.connected = False
 
         try:
             params = dict(arg.split("=") for arg in args.split("&"))
@@ -165,14 +165,15 @@ class Hue:
 
         if params == {}:
             # if there's a bridge IP, try to talk to it.
-            if self.settings.bridge_ip not in ["-", "", None]:
-                result = bridge.user_exists(
-                    self.settings.bridge_ip,
-                    self.settings.bridge_user
-                )
-                if result:
-                    self.connected = True
-                    self.update_controllers()
+            # if self.settings.bridge_ip not in ["-", "", None]:
+            #     result = bridge.user_exists(
+            #         self.settings.bridge_ip,
+            #         self.settings.bridge_user
+            #     )
+            #     if result:
+            #         self.connected = True
+            #         self.update_controllers()
+            self.update_controllers()
         elif params['action'] == "discover":
             ui.discover_hue_bridge(self)
             self.update_controllers()
@@ -194,11 +195,11 @@ class Hue:
             # not yet implemented
             pass
 
-        if self.connected:
-            if self.settings.misc_initialflash:
-                self.ambilight_controller.flash_lights()
-                self.theater_controller.flash_lights()
-                self.static_controller.flash_lights()
+        # if self.connected:
+        if self.settings.misc_initialflash:
+            self.ambilight_controller.flash_lights()
+            self.theater_controller.flash_lights()
+            self.static_controller.flash_lights()
 
     def update_controllers(self):
         self.ambilight_controller = AmbilightController(
@@ -323,6 +324,6 @@ if (__name__ == "__main__"):
     if len(sys.argv) == 2:
         args = sys.argv[1]
     hue = Hue(settings, args)
-    while not hue.connected and not monitor.abortRequested():
+    while not monitor.abortRequested():
         time.sleep(1)
     run()
